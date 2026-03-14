@@ -33,22 +33,25 @@ const App = () => {
         ))}
       </div>
 
-      <div aria-live="polite" aria-label="Anime scene previews">
-        <AnimatePresence>
-          {scenes?.map((item, index) => (
-            <AnimePreview
-              key={item.src}
-              altText={
-                ANIME_TITLES.find((t) => t.id === hoveredText)?.displayName ??
-                ""
-              }
-              item={item}
-              index={index}
-              mousePosition={mousePosition}
-            />
-          ))}
-        </AnimatePresence>
-      </div>
+      <span className="sr-only" aria-live="polite">
+        {hoveredText
+          ? `Showing scenes from ${ANIME_TITLES.find((t) => t.id === hoveredText)?.displayName}`
+          : ""}
+      </span>
+
+      <AnimatePresence>
+        {scenes?.map((item, index) => (
+          <AnimePreview
+            key={item.src}
+            altText={
+              ANIME_TITLES.find((t) => t.id === hoveredText)?.displayName ?? ""
+            }
+            item={item}
+            index={index}
+            mousePosition={mousePosition}
+          />
+        ))}
+      </AnimatePresence>
     </main>
   );
 };

@@ -1,22 +1,21 @@
 import { motion } from "framer-motion";
-import { MousePosition } from "../lib/types";
-import { AnimeSceneEntry } from "../lib/data";
+import type { MousePosition } from "../lib/types";
+import type { AnimeSceneEntry } from "../lib/data";
 
 type AnimePreviewProps = {
-  hoveredText: string;
+  altText: string;
   item: AnimeSceneEntry;
   index: number;
   mousePosition: MousePosition;
 };
 
 export const AnimePreview = ({
-  hoveredText,
+  altText,
   item,
   index,
   mousePosition,
 }: AnimePreviewProps) => (
   <motion.div
-    key={index}
     className="absolute flex aspect-[3/2] w-64 items-center justify-center overflow-hidden rounded-xl shadow-xl"
     initial={{
       scale: 0,
@@ -42,7 +41,8 @@ export const AnimePreview = ({
   >
     <img
       src={item.src}
-      alt={hoveredText}
+      alt={`Scene from ${altText}`}
+      loading="lazy"
       className="h-full w-full object-cover"
     />
   </motion.div>

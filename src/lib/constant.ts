@@ -1,4 +1,4 @@
-import { AnimeTitle } from "./types";
+import type { AnimeTitle } from "./types";
 
 export const ANIMATION_CONFIG = {
   initial: {
@@ -20,5 +20,5 @@ export const ANIME_TITLES: AnimeTitle[] = [
   { id: "silentVoice", displayName: "a silent voice" },
   { id: "attackOnTitan", displayName: "attack on titan" },
   { id: "spiritedAway", displayName: "spirited away" },
-  { id: "bunnyGirl", displayName: "Rascal Does Not Dream" },
+  { id: "bunnyGirl", displayName: "rascal does not dream" },
 ];

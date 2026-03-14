@@ -1,10 +1,13 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { toast } from "sonner";
 
 export const useMobileWarning = () => {
+  const hasShown = useRef(false);
+
   useEffect(() => {
     const showWarning = () => {
-      if (window.innerWidth < 768) {
+      if (window.innerWidth < 768 && !hasShown.current) {
+        hasShown.current = true;
         toast.warning("The demo may not work as expected on smaller screens.");
       }
     };
