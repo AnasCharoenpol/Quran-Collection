@@ -3,7 +3,14 @@ export type MousePosition = {
   y: number;
 };
 
+export type AnimeId =
+  | "demonSlayer"
+  | "silentVoice"
+  | "attackOnTitan"
+  | "spiritedAway"
+  | "bunnyGirl";
+
 export type AnimeTitle = {
-  id: string;
+  id: AnimeId;
   displayName: string;
 };

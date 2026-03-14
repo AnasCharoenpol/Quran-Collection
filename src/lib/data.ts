@@ -21,7 +21,9 @@ export type AnimeSceneEntry = {
   rotate: number;
 };
 
-export const data: Record<string, AnimeSceneEntry[]> = {
+import type { AnimeId } from "./types";
+
+export const data: Record<AnimeId, AnimeSceneEntry[]> = {
   demonSlayer: [
     {
       src: demonSlayer1,

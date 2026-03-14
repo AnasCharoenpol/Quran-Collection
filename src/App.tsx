@@ -1,21 +1,26 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { AnimatePresence } from "framer-motion";
 import { AnimePreview } from "./components/AnimePreview";
 import { AnimeTitleText } from "./components/AnimeTitleText";
 import { useMobileWarning } from "./hooks/useMobileWarning";
 import { useMousePosition } from "./hooks/useMousePosition";
 import { ANIME_TITLES } from "./lib/constant";
-import { AnimeSceneEntry, data } from "./lib/data";
-import "./App.css";
+import { data } from "./lib/data";
+import type { AnimeId } from "./lib/types";
 import { Toaster } from "sonner";
 
-const Page = () => {
-  const [hoveredText, setHoveredText] = useState<string | null>(null);
+const App = () => {
+  const [hoveredText, setHoveredText] = useState<AnimeId | null>(null);
   const mousePosition = useMousePosition();
   useMobileWarning();
 
+  const clearHover = useCallback(() => setHoveredText(null), []);
+
+  const scenes = hoveredText ? data[hoveredText] : null;
+
   return (
-    <div className="relative flex w-screen flex-col items-center justify-center">
+    <main className="relative flex w-screen flex-col items-center justify-center">
+      <h1 className="sr-only">Anime Scene Gallery</h1>
       <Toaster />
       <div className="flex flex-col items-center justify-center gap-4 text-nowrap text-5xl font-black uppercase text-zinc-300 *:cursor-default md:text-7xl">
         {ANIME_TITLES.map((title) => (
@@ -23,25 +28,29 @@ const Page = () => {
             key={title.id}
             title={title}
             onHover={setHoveredText}
-            onHoverEnd={() => setHoveredText(null)}
+            onHoverEnd={clearHover}
           />
         ))}
       </div>
 
-      <AnimatePresence>
-        {hoveredText &&
-          data[hoveredText].map((item: AnimeSceneEntry, index: number) => (
+      <div aria-live="polite" aria-label="Anime scene previews">
+        <AnimatePresence>
+          {scenes?.map((item, index) => (
             <AnimePreview
-              key={index}
-              hoveredText={hoveredText}
+              key={item.src}
+              altText={
+                ANIME_TITLES.find((t) => t.id === hoveredText)?.displayName ??
+                ""
+              }
               item={item}
               index={index}
               mousePosition={mousePosition}
             />
           ))}
-      </AnimatePresence>
-    </div>
+        </AnimatePresence>
+      </div>
+    </main>
   );
 };
 
-export default Page;
+export default App;
