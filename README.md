@@ -19,9 +19,8 @@ An open, global dashboard dedicated to showcasing curated, beautifully edited sh
 - **Full View Playback**: Categorized grid layouts providing clean playback environments with darkened cinematic backdrops.
 
 ## 🎞️ Video Preview
-*Screenshot or video demonstration coming soon! (Upload a screen recording to a service like YouTube or an Imgur GIF to embed here).*
 
-![Quran Collection Preview Placeholder](https://via.placeholder.com/800x450.png?text=Quran+Collection+Preview)
+https://github.com/user-attachments/assets/1a132ac3-b288-4ece-847b-9883612d5327
 
 ## 🛠️ The Process
 This project initially started as a visual experiment by modifying a static UI codebase (an Anime Scene Gallery clone). 
