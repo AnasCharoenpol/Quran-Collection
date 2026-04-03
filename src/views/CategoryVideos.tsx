@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, Play } from "lucide-react";
+import { ArrowLeft, Play, Trash2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "../lib/supabase";
+import { toast } from "sonner";
 import type { Category, Video } from "../lib/types";
 
 export const CategoryVideos = () => {
@@ -11,6 +12,7 @@ export const CategoryVideos = () => {
   const [videos, setVideos] = useState<Video[]>([]);
   const [loading, setLoading] = useState(true);
   const [playingVideoId, setPlayingVideoId] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState<string | null>(null);
 
   useEffect(() => {
     if (id) {
@@ -42,6 +44,49 @@ export const CategoryVideos = () => {
       console.error("Failed to fetch category videos", e);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDelete = async (e: React.MouseEvent, videoId: string, videoUrl: string) => {
+    e.stopPropagation(); // Prevention so it doesn't open the video player
+    
+    if (!window.confirm("Are you sure you want to permanently delete this video?")) {
+      return;
+    }
+
+    setIsDeleting(videoId);
+
+    try {
+      // Extract the file path out of the public URL string
+      // URL format: https://[domain]/storage/v1/object/public/videos/[path]
+      const pathParts = videoUrl.split("/videos/");
+      if (pathParts.length > 1) {
+        const filePath = pathParts[1];
+        
+        // 1. Delete the actual file from Supabase Storage
+        const { error: storageError } = await supabase.storage
+          .from("videos")
+          .remove([filePath]);
+          
+        if (storageError) throw storageError;
+      }
+
+      // 2. Delete the record from the database
+      const { error: dbError } = await supabase
+        .from("videos")
+        .delete()
+        .eq("id", videoId);
+
+      if (dbError) throw dbError;
+
+      // Update UI state
+      setVideos((prev) => prev.filter((v) => v.id !== videoId));
+      toast.success("Video deleted successfully");
+    } catch (error: any) {
+      console.error("Error deleting video:", error);
+      toast.error(error.message || "Failed to delete video");
+    } finally {
+      setIsDeleting(null);
     }
   };
 
@@ -96,7 +141,7 @@ export const CategoryVideos = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.1 }}
-                className="group relative flex flex-col rounded-2xl bg-zinc-900 border border-zinc-800 overflow-hidden hover:border-zinc-600 transition-colors cursor-pointer"
+                className={`group relative flex flex-col rounded-2xl bg-zinc-900 border border-zinc-800 overflow-hidden hover:border-zinc-600 transition-colors cursor-pointer ${isDeleting === video.id ? 'opacity-50 pointer-events-none' : ''}`}
                 onClick={() => setPlayingVideoId(video.id)}
               >
                 <div className="aspect-[9/16] relative bg-black">
@@ -114,6 +159,17 @@ export const CategoryVideos = () => {
                       <Play fill="white" size={24} />
                     </div>
                   </div>
+                  <button
+                    onClick={(e) => handleDelete(e, video.id, video.video_url)}
+                    className="absolute top-3 right-3 p-2.5 rounded-full bg-black/50 text-zinc-300 hover:text-red-400 hover:bg-black/80 transition-all opacity-0 group-hover:opacity-100"
+                    title="Delete Video"
+                  >
+                    {isDeleting === video.id ? (
+                      <div className="w-5 h-5 border-2 border-zinc-500 border-t-zinc-300 rounded-full animate-spin" />
+                    ) : (
+                      <Trash2 size={20} />
+                    )}
+                  </button>
                 </div>
                 <div className="p-4">
                   <h3 className="font-semibold text-lg truncate text-white" title={video.title}>
