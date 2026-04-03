@@ -1,5 +1,3 @@
-import type { AnimeTitle } from "./types";
-
 export const ANIMATION_CONFIG = {
   initial: {
     scaleY: 1.15,
@@ -14,11 +12,3 @@ export const ANIMATION_CONFIG = {
     mass: 0.8,
   },
 } as const;
-
-export const ANIME_TITLES: AnimeTitle[] = [
-  { id: "demonSlayer", displayName: "demon slayer" },
-  { id: "silentVoice", displayName: "a silent voice" },
-  { id: "attackOnTitan", displayName: "attack on titan" },
-  { id: "spiritedAway", displayName: "spirited away" },
-  { id: "bunnyGirl", displayName: "rascal does not dream" },
-];

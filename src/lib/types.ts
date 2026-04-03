@@ -3,14 +3,24 @@ export type MousePosition = {
   y: number;
 };
 
-export type AnimeId =
-  | "demonSlayer"
-  | "silentVoice"
-  | "attackOnTitan"
-  | "spiritedAway"
-  | "bunnyGirl";
+export type Category = {
+  id: string;
+  name: string;
+  created_at: string;
+};
 
-export type AnimeTitle = {
-  id: AnimeId;
-  displayName: string;
+export type Video = {
+  id: string;
+  title: string;
+  category_id: string;
+  video_url: string;
+  created_at: string;
+};
+
+// UI Types
+export type SceneEntry = {
+  src: string;
+  offsetX: number;
+  offsetY: number;
+  rotate: number;
 };
